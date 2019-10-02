@@ -1,0 +1,39 @@
+GET _search
+{
+
+    "constant_score" : {
+        "filter" : {
+            "missing" : { "field" : "ruleids" }
+        }
+    }
+
+}
+
+
+--------------------update an existing field(will create a new field if not present)-----------
+POST /cn_enrichevent_dev2/_doc/7b76aa87-a3cd-49c4-bdd6-825cd53f47e5/_update?pretty
+{
+  "doc":{"userDto": { "empId":"NULL",
+ "userId": "NULL" }
+    
+  }
+}
+
+----------search by field------------------
+
+GET cn_enrichevent_dev2/_search
+{
+  "query": {
+    "term": {
+      "userDto.empId": "eb25964" 
+    }
+  }
+}
+
+
+-----------------delete a field-------------
+
+POST /cn_enrichevent_dev2/_doc/7b76aa87-a3cd-49c4-bdd6-825cd53f47e5/_update
+{
+  "script" : "ctx._source.remove(\"userDto.userId\")"
+}

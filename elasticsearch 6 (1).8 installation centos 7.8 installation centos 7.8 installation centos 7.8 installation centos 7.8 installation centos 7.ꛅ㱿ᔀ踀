@@ -1,0 +1,75 @@
+﻿              Install Elasticsearch with RPM
+
+➢ Import the Elasticsearch PGP Key-
+• Download and install the public signing key:
+• [abhi@nmbrsys ~]$ rpm –import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+➢ Installing from the RPM repository-
+• Create a file called elasticsearch.repo in the /etc/yum.repos.d/ directory for RedHat based distributions,
+• [abhi@nmbrsys ~]$ cd /etc/yum.repos.d/
+• [abhi@nmbrsys yum.repos.d]$ sudo vi elasticsearch.repo
+• Press i to switch to Insert mode
+
+[elasticsearch-6.x]
+name=Elasticsearch repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+   
+press [Esc] to shift to the command mode and press :wq! and hit [Enter] to save a file.
+
+➢ Install elasticsearch-6.X
+• [abhi@nmbrsys yum.repos.d]$ sudo yum install elasticsearch
+
+➢ Running Elasticsearch with init
+• [abhi@nmbrsys yum.repos.d]$ sudo chkconfig --add elasticsearch
+• [abhi@nmbrsys yum.repos.d]$ sudo -i service elasticsearch start
+   Starting elasticsearch (via systemctl):                    [  OK  ]
+• [abhi@nmbrsys yum.repos.d]$ sudo -i service elasticsearch status
+   elasticsearch.service - Elasticsearch
+   Loaded: loaded (/usr/lib/systemd/system/elasticsearch.service; disabled; vendor preset: disabled)
+   Active: active (running) since Thu 2019-07-25 17:46:53 IST; 2h 35min ago
+     Docs: http://www.elastic.co
+  Main PID: 17988 (java)
+    Tasks: 78
+   CGroup: /system.slice/elasticsearch.service
+           ├─17988 /bin/java -Xms1g -Xmx1g -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyF...
+           └─18071 /usr/share/elasticsearch/modules/x-pack-ml/platform/linux-x86_64/bin/contro...
+
+           nmbrsys systemd[1]: Started Elasticsearch.
+
+➢ configure Elasticsearch.
+• In the 'Network' block, uncomment the network.host and http.port lines.
+• [abhi@nmbrsys yum.repos.d]$ sudo vi /etc/elasticsearch/elasticsearch.yml
+   Press i to switch to Insert mode
+   
+   network.host: 0.0.0.0
+   http.port: 9200
+
+press [Esc] to shift to the command mode and press :wq! and hit [Enter] to save a file.
+• [abhi@nmbrsys yum.repos.d]# sudo -i service elasticsearch restart
+   Restarting elasticsearch (via systemctl):                  [  OK  ]
+
+• [abhi@nmbrsys yum.repos.d]# curl http://0.0.0.0:9200
+{
+  "name" : "L2XXIeQ",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "izQMTU3VTheCxQHoeYwo5A",
+  "version" : {
+    "number" : "6.8.1",
+    "build_flavor" : "default",
+    "build_type" : "rpm",
+    "build_hash" : "1fad4e1",
+    "build_date" : "2019-06-18T13:16:52.517138Z",
+    "build_snapshot" : false,
+    "lucene_version" : "7.7.0",
+    "minimum_wire_compatibility_version" : "5.6.0",
+    "minimum_index_compatibility_version" : "5.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+

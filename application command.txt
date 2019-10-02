@@ -1,0 +1,1 @@
+java -jar demo.jar  --spring.config.name=application	 --spring.config.location=E:\aschecking\conf\
